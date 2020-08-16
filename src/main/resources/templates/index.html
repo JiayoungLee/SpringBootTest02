@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>*** Manager System</title>
+
+    <!-- 引入 js -->
+    <!--  引入本地的js文件 $-->
+    <script th:src="${'/js/jquery.min.js'}" type="text/javascript"></script>
+    <!-- 引入网上的js文件 @-->
+    <script th:src="@{https://cdn.bootcss.com/layer/2.1/layer.js}" type="text/javascript"></script>
+
+</head>
+<body>
+    <!-- 引入碎片文件 header.html -->
+    <div th:replace="fragments/header"></div>
+
+    <!-- 引入碎片文件 sidebar.html -->
+    <div th:replace="fragments/sidebar"></div>
+
+    <!-- body content -->
+    <div th:if="${template}">
+        <div th:replace="${template}"></div>
+    </div>
+
+    <!-- 引入碎片文件 footer.html -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
