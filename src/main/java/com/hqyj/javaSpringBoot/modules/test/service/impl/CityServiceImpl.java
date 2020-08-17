@@ -2,6 +2,7 @@ package com.hqyj.javaSpringBoot.modules.test.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hqyj.javaSpringBoot.aspect.ServiceAnnotation;
 import com.hqyj.javaSpringBoot.modules.common.vo.Result;
 import com.hqyj.javaSpringBoot.modules.common.vo.SearchVo;
 import com.hqyj.javaSpringBoot.modules.test.dao.CityDao;
@@ -29,6 +30,7 @@ public class CityServiceImpl implements CityService {
     private CityDao cityDao;
 
     @Override
+    @ServiceAnnotation(value = "bbb")
     public List<City> getCountryByCountryId(int countryId) {
         return cityDao.getCountryByCountryId(countryId);
     }
