@@ -58,22 +58,29 @@ public class TestController {
     @Autowired
     private CountryService countryService;
 
+    @GetMapping("/indexSimple")
+    public String indexSimpleTestPage(){
+        return "indexSimple";
+    }
+
 
     /*
      * 文件下载 方式1 ---常用
      * http://localhost:667/test/file   ----get
      * */
     @GetMapping(value = "/file")
-    public ResponseEntity<Resource> downLoadFile(@RequestParam String fileName) {
+    public ResponseEntity<Resource> downLoadFile(@RequestParam String fileName) throws UnsupportedEncodingException {
         Resource resource = null;
         try {
             resource = new UrlResource(Paths.get("F:\\uploadTestForCode\\" + fileName).toUri());
             if (resource.exists() && resource.isReadable()) {
+                //解决浏览器header编码格式为ISO-8859-1而出现中文乱码问题
+                String aa = new String(fileName.getBytes("utf-8"), "ISO-8859-1");
                 return ResponseEntity
                         .ok()
                         .header(HttpHeaders.CONTENT_TYPE, "application/octet-stream")
                         .header(HttpHeaders.CONTENT_DISPOSITION,
-                                String.format("attachment; filename=\"%s\"", resource.getFilename()))
+                                String.format("attachment; filename=\"%s\"", aa))
                         .body(resource);
             }
         } catch (MalformedURLException e) {
@@ -114,13 +121,13 @@ public class TestController {
             e.printStackTrace();
         } finally {
             try {
-                if (fileInputStream != null){
+                if (fileInputStream != null) {
                     fileInputStream.close();
                 }
-                if (bufferedInputStream != null){
+                if (bufferedInputStream != null) {
                     bufferedInputStream.close();
                 }
-            }catch (Exception e2){
+            } catch (Exception e2) {
                 LOGGER.debug(e2.getMessage());
                 e2.printStackTrace();
             }

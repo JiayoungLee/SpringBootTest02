@@ -519,44 +519,87 @@ AOP编程
 	步骤三：应用
 		页面书写文件上传框
 
+文件下载
+	步骤一：导入 jar ---- 无需导入；
+	步骤二：配置 ---- 无需配置；
+	步骤三：应用
+		设置响应头
+			Content-Type: application/octet-stream
+		下载文件当前页面无刷新
 
-	auditevents ---- 显示当前应用程序的审计事件信息；
-	caches ---- 显示可用缓存信息；
-	conditions ---- 显示自动装配类的状态及及应用信息；
-	configprops ---- 显示所有 @ConfigurationProperties 列表；
-	env ---- ConfigurableEnvironment 中的属性；
-	health ---- 显示应用的健康信息（未认证只显示status，认证显示全部信息详情）；
-	info ---- 显示任意的应用信息；
-	metrics ---- 查看应用基本指标列表；
-	mappings ---- 显示所有 @RequestMapping 路径集列表；
-	scheduledtasks ---- 显示应用程序中的计划任务；
-	shutdown ---- 允许应用以优雅的方式关闭（默认情况下不启用）；
-	threaddump ---- 执行一个线程dump；
-	httptrace ---- 显示HTTP跟踪信息（默认显示最后100个HTTP请求 - 响应交换）；
-	heapdump ---- 返回一个GZip压缩的hprof堆dump文件；
+		文件下载控制器
+			控制器无返回，文件内容以流的方式传输给客户；
+			控制器返回 ResponseEntity 对象
+
+		页面上需要下载链接
 
 
+监控端点
+	步骤一：导入jar
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+	步骤二：配置
+		# 修改 actuator 端口
+		management.server.port=9001
+		# 修改访问路径 ---- 2.0之前默认是/ ---- 2.0默认是/actuator
+		management.endpoints.web.base-path=/monitor
+		# 开启其他端点
+		management.endpoints.web.exposure.include=env,beans
+		# 开启所有端点
+		management.endpoints.web.exposure.include=*
+		# 排除某些端点
+		management.endpoints.web.exposure.exclude=env,beans
+		# health 端点在默认情况下，仅显示 "status": "UP"，显示health详细信息
+		management.endpoint.health.show-details=always
+		# 配置开启或关闭多个端点
+		management.endpoints.enabled-by-default=false
+		# 配置某个端点开启或关闭
+		management.endpoint.shutdown.enabled=true
+	步骤三：应用
+		auditevents ---- 显示当前应用程序的审计事件信息；
+		caches ---- 显示可用缓存信息；
+		conditions ---- 显示自动装配类的状态及及应用信息；
+		configprops ---- 显示所有 @ConfigurationProperties 列表；
+		env ---- ConfigurableEnvironment 中的属性；
+		health ---- 显示应用的健康信息（未认证只显示status，认证显示全部信息详情）；
+		info ---- 显示任意的应用信息；
+		metrics ---- 查看应用基本指标列表；
+		mappings ---- 显示所有 @RequestMapping 路径集列表；
+		scheduledtasks ---- 显示应用程序中的计划任务；
+		shutdown ---- 允许应用以优雅的方式关闭（默认情况下不启用）；
+		threaddump ---- 执行一个线程dump；
+		httptrace ---- 显示HTTP跟踪信息（默认显示最后100个HTTP请求 - 响应交换）；
+		heapdump ---- 返回一个GZip压缩的hprof堆dump文件；
 
-	# 修改 actuator 端口
-	management.server.port=9001
-	# 修改访问路径 ---- 2.0之前默认是/ ---- 2.0默认是/actuator
-	management.endpoints.web.base-path=/monitor
-	# 开启其他端点
-	management.endpoints.web.exposure.include=env,beans
-	# 开启所有端点
-	management.endpoints.web.exposure.include=*
-	# 排除某些端点
-	management.endpoints.web.exposure.exclude=env,beans
-	# health 端点在默认情况下，仅显示 "status": "UP"，显示health详细信息
-	management.endpoint.health.show-details=always
-	# 配置开启或关闭多个端点
-	management.endpoints.enabled-by-default=false
-	# 配置某个端点开启或关闭
-	management.endpoint.shutdown.enabled=true
+
+============= day_08 ===========
+计算机编码
+	编码是个令人头疼的问题！
+	ASCII
+	计算机只能处理数字，文本或其他内容，首先要转化为数字；
+	计算机采用8个bit（bit）作为一个字节（byte），一个字节表示的最大整数是255（二进制的 8bit 最大为11111111，转化为十进制 255），想要表示更大的整数，就必须用多个字节，两个字节可以表示的最大整数是 65535，4 个字节可以表示的最大整数是 4294967295；
+	最早只有128（0-127）个符号编到计算机里（大小写英文字母、数字和一些符号），这个编码表被称为 ASCII 编码，比如大写字母 A 的编码是 65，小写字母 z 的编码是 122；
+	各国指定了各自的编码规范：中国（GB2312）、日本（Shift_JIS）、韩国（Euc-kr）……世界上有上百种语言，每种规范还不能和ASCII冲突，将这些规范混在文本中，乱码就产生了；
+	Iso-8859-1
+	单字节编码，和 Ascii 编码相似，最多能表示的字符范围是 0-255，应用于英文系列，很明显，iso-8859-1 编码表示的字符范围很窄，无法表示中文字符，但是，由于是单字节编码，和计算机最基础的表示单位一致，所以很多时候，仍旧使用 iso-8859-1 编码来表示，而且在很多协议上，默认使用该编码；
+	Unicode
+	为了解决乱码问题，Unicode应运而生，Unicode把所有语言都统一到一套编码里，这样就不会再有乱码问题了，但是，ASCII编码是1个字节，而Unicode编码通常是2个字节，在存储和传输上就十分不划算；
+	UTF-8
+	为了解决Unicode存储空间的问题，又出现了把Unicode编码转化为“可变长编码”的UTF-8编码，UTF-8编码把一个Unicode字符根据不同的数字大小编码成1-6个字节，常用的英文字母被编码成1个字节，汉字通常是3个字节，只有很生僻的字符才会被编码成4-6个字节，如果你要传输的文本包含大量英文字符，用UTF-8编码就能节省空间；
+	UTF-8编码有一个额外的好处，就是ASCII编码实际上可以被看成是UTF-8编码的一部分，所以，大量只支持ASCII编码的历史遗留软件可以在UTF-8编码下继续工作；
+	在计算机内存中，统一使用Unicode编码，当需要保存到硬盘或者需要传输的时候，就转换为UTF-8编码；
+	Base64
+	Base64就是一种基于64个可打印字符来表示二进制数据的方法，要求把每三个8Bit的字节转换为四个6Bit的字节（3*8 = 4*6 = 24），然后把6Bit再添两位高位0，组成四个8Bit的字节，也就是说，转换后的字符串理论上将要比原来的长1/3；
+	使用场景
+	电子邮件中不能直接使用非ASCII码字符传输数据，所以使用base64进行编码后传输，因为base64的64个字符肯定有对应的ascii编码；
+	保存图片：图片数据归根到底还是一堆二进制串，用base64编码后的显示成的字符串可以存到数据库；
+	请不要再叫base64加密，请叫base64编码；
 
 
 
-		
+
 		
 		
 		

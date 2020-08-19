@@ -1,4 +1,4 @@
-package com.hqyj.javaSpringBoot.modules.accountController;
+package com.hqyj.javaSpringBoot.modules.account.accountController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
