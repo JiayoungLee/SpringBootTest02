@@ -46,6 +46,7 @@ Spring Boot 基础介绍
 		@Resource ---- 按照 Bean 的名字组装 Bean；
 		@Aspect（@Bedore、@Aroud、@After、@PointCut、@Oder） ----- Aop 注解
 		@Transational ---- 事务注解
+		@WebFilter     ---- 过滤器
 		@Controller（RestControler） ----- 控制层注解
 			@RequestMapping、@GetMapping、@PostMapping、@PutMapping、@DeleteMapping || consumes（进入控制器的数据类型）、produces（控制器输出的数据类型）
 				application/json
@@ -459,10 +460,102 @@ Thymeleaf 标签运用
 
 
 
-		
+============= day_06 ===========
+过滤器
+	servlet的核心接口，实现 Filter 的接口
+	需求：过滤掉请求参数中 “fuck” 字符串
+	步骤一：pom 导入 jar ---- 无需导入 jar
+	步骤二：配置
+		application.properties ---- 无需配置
+		创建过滤器，并将该过滤器注册到容器里面 ---- WebMvcConfig
+			FilterRegistrationBean 注册写好的过滤器
+	步骤三：应用
+		书写过滤器的业务逻辑
+		调用接口进行测试
+
+拦截器
+	和过滤器的区别
+		拦截器能够调用容器中的 bean
+		过滤器能实现的功能，拦截器依然能够实现
+		拦截器只能对 控制器 起作用，过滤器对 request response对象进行处理
+	需求：设置一个拦截器，通过请求 path 路径，定位访问页面的文件，每个控制器直接返回外层碎片组装器，设置 template 的代码移植到拦截器完成；
+		127.0.0.1/test/index --- 请求路径
+		\test\index.html ---- 请求访问页面路径
+	步骤一：引入jar ---- spring提供功能，无需引入额外jar
+	步骤二：配置
+		书写一个拦截器；
+		将该拦截器注册到容器中
+	步骤三：应用
+		书写拦截器业务逻辑代码
+		重构控制器，进行测试
+
+AOP编程
+	需求：在控制层以log的方式记录request相关信息
+	步骤一：导入jar ---- 无需导入
+	步骤二：配置
+		书写切面程序
+	步骤三：应用
+		书写切面业务逻辑，调用接口进行测试
+
+	==========
+	1、切面类上使用@Aspect
+	2、切入的位置@Pointcut
+		包路劲表达式的方式
+		注解的方式 --- @Transactional
+	3、通知程序
+		before、after、around
+
+
 	
 		
-		
+============= day_07 ===========
+文件上传
+	步骤一：导入jar ---- 无需导入 jar
+	步骤二：配置
+		application.properties
+			# for upload file size
+			spring.servlet.multipart.maxFileSize=-1
+			spring.servlet.multipart.maxRequestSize=-1
+	步骤三：应用
+		页面书写文件上传框
+
+
+	auditevents ---- 显示当前应用程序的审计事件信息；
+	caches ---- 显示可用缓存信息；
+	conditions ---- 显示自动装配类的状态及及应用信息；
+	configprops ---- 显示所有 @ConfigurationProperties 列表；
+	env ---- ConfigurableEnvironment 中的属性；
+	health ---- 显示应用的健康信息（未认证只显示status，认证显示全部信息详情）；
+	info ---- 显示任意的应用信息；
+	metrics ---- 查看应用基本指标列表；
+	mappings ---- 显示所有 @RequestMapping 路径集列表；
+	scheduledtasks ---- 显示应用程序中的计划任务；
+	shutdown ---- 允许应用以优雅的方式关闭（默认情况下不启用）；
+	threaddump ---- 执行一个线程dump；
+	httptrace ---- 显示HTTP跟踪信息（默认显示最后100个HTTP请求 - 响应交换）；
+	heapdump ---- 返回一个GZip压缩的hprof堆dump文件；
+
+
+
+	# 修改 actuator 端口
+	management.server.port=9001
+	# 修改访问路径 ---- 2.0之前默认是/ ---- 2.0默认是/actuator
+	management.endpoints.web.base-path=/monitor
+	# 开启其他端点
+	management.endpoints.web.exposure.include=env,beans
+	# 开启所有端点
+	management.endpoints.web.exposure.include=*
+	# 排除某些端点
+	management.endpoints.web.exposure.exclude=env,beans
+	# health 端点在默认情况下，仅显示 "status": "UP"，显示health详细信息
+	management.endpoint.health.show-details=always
+	# 配置开启或关闭多个端点
+	management.endpoints.enabled-by-default=false
+	# 配置某个端点开启或关闭
+	management.endpoint.shutdown.enabled=true
+
+
+
 		
 		
 		

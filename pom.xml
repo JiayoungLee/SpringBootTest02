@@ -34,11 +34,11 @@
             <!--<scope>provided</scope>-->
         <!--</dependency>-->
 
-        <!-- spring dev tools -->
-        <!--<dependency>
+        <!-- spring dev tools 热部署-->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-        </dependency>-->
+        </dependency>
 
         <!--SpringBoot配置-->
         <dependency>
@@ -101,6 +101,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- endpoint -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
     </dependencies>

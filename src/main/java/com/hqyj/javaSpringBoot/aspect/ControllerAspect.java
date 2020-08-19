@@ -24,6 +24,15 @@ import java.util.Arrays;
 public class ControllerAspect {
     private final static Logger LOGGER = LoggerFactory.getLogger(ControllerAspect.class);
 
+    /**
+     * 关联在方法上的切点
+     * 第一个*代表返回类型不限
+     * 第二个*代表module下所有子包
+     * 第三个*代表所有类
+     * 第四个*代表所有方法
+     * (..) 代表参数不限
+     * Order 代表优先级，数字越小优先级越高
+     */
     @Pointcut("execution(public * com.hqyj.javaSpringBoot.modules.*.controller.*.*(..))")
     @Order(1)
     public void controllerPointcut(){}
@@ -31,6 +40,7 @@ public class ControllerAspect {
     @Before(value = "com.hqyj.javaSpringBoot.aspect.ControllerAspect.controllerPointcut()")
     public void beforeController(JoinPoint joinPoint){
         LOGGER.debug("==== This is before controller =====");
+        //获得request对象的一种方法
         ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -45,6 +55,7 @@ public class ControllerAspect {
     }
 
     @Around(value = "com.hqyj.javaSpringBoot.aspect.ControllerAspect.controllerPointcut()")
+    //注意around方法 返回类型为Object，参数类型ProceedingJoinPoint
     public Object arroundController(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         LOGGER.debug("==== This is around controller ==== ");
         return proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());

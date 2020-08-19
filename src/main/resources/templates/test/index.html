@@ -1,3 +1,26 @@
+<h3>file upload and download</h3>
+<a href="/test/file2?fileName=timg.jpg">download file</a>
+
+<br>
+
+<p th:text="${message}"></p>
+<!--上传单个文件-->
+<p>上传文件，使用multipart/form-data类型</p>
+<form action="/test/file" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">上传</button>
+</form>
+
+<br>
+<!--上传多个文件-->
+<form action="/test/files" method="post" enctype="multipart/form-data">
+    <input type="file" name="files">
+    <input type="file" name="files">
+    <button type="submit">上传</button>
+</form>
+
+<br>
+
 <h3>th:text</h3>
 <h1 th:text="${thymeleafTitle}">This is thymeleaf title</h1>
 <p th:text="${thymeleafTitle}">This is thymeleaf ti-tle</p>
