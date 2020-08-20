@@ -1,4 +1,4 @@
-package com.hqyj.javaSpringBoot.modules.account.accountController;
+package com.hqyj.javaSpringBoot.modules.account.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/account")
 public class AccountController {
 
+    /**
+     * 127.0.0.1:667/account/login   ---- get
+     */
+    @GetMapping("/login")
+    public String loginPage(){
+        return "indexSimple";
+    }
+
+    @GetMapping("/register")
+    public String registerPage(){
+        return  "indexSimple";
+    }
 
     /**
      * 127.0.0.1:667/account/users   ---- get

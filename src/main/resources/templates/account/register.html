@@ -1,0 +1,71 @@
+<div class="login_wrapper">
+
+    <div id="register" class="animate form login_form">
+        <section class="login_content">
+            <form action="javascript:void(0);">
+                <h1>Create Account</h1>
+                <div>
+                    <input name="userName" type="text" class="form-control" placeholder="Username" required=""/>
+                </div>
+
+                <div>
+                    <input name="password" type="password" class="form-control" placeholder="Password" required=""/>
+                </div>
+                <div>
+                    <a id="registerButton" class="btn btn-default submit" href="javascript:void(0);">Submit</a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="separator">
+                    <p class="change_link">Already a member ?
+                        <a href="/account/login" class="to_register"> Log in </a>
+                    </p>
+
+                    <div class="clearfix"></div>
+                    <br/>
+
+                    <div>
+                        <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                        <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //页面加载时就要执行的函数
+    $(function () {
+        $("#registerButton").bind("click", function () {
+            register();
+        });
+    });
+
+    function register() {
+        var user = {};
+        user.userName = $("[name=userName]").val();
+        user.password = $("[name=password]").val();
+
+        $.ajax({
+            url: "/api/user",
+            type: "post",
+            contentType: "application/json",
+            data: JSON.stringify(user),
+            success: function (data) {
+                if (data.status == 200) {
+                    if (confirm("注册成功！是否跳转到登陆页面？")) {
+                        location.href = "/account/login";
+                    }
+                    location.href = "/account/register";
+                } else {
+                    layer.msg(data.message, {icon: 0});
+                }
+            },
+            error: function (data) {
+                layer.msg(data.responseText, {icon: 0});
+            }
+        })
+    }
+</script>
