@@ -4968,3 +4968,9 @@ ul.notifications {
 
 .calendar-exibit .calendar-table {
   padding: 0 0 4px 0; }
+
+
+/*==========================以下为自定义==============================*/
+.pagination{
+  float: right;
+}

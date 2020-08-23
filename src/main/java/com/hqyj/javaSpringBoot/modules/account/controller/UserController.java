@@ -5,12 +5,10 @@ import com.hqyj.javaSpringBoot.modules.account.entity.User;
 import com.hqyj.javaSpringBoot.modules.account.service.UserService;
 import com.hqyj.javaSpringBoot.modules.common.vo.Result;
 import com.hqyj.javaSpringBoot.modules.common.vo.SearchVo;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * author  Jayoung
@@ -23,8 +21,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-
 
     /**
      * 127.0.0.1:667/api/user   ---- post
@@ -54,5 +50,31 @@ public class UserController {
     @PostMapping(value = "/users",consumes = MediaType.APPLICATION_JSON_VALUE)
     public PageInfo<User> getUsersBySearchVo(@RequestBody SearchVo searchVo) {
         return userService.getUsersBySearchVo(searchVo);
+    }
+
+    /**
+     * 127.0.0.1:667/api/user   ---- put
+     * {"userName":"adminnn","userImg":"/aaa.jpg","userId":"4"}
+     */
+    @PutMapping(value = "/user",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Result<User> updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
+    }
+
+
+    /**
+     * 127.0.0.1:667/api/user/userId   ---- delete
+     */
+    @DeleteMapping("/user/{userId}")
+    public Result<Object> deleteUser(@PathVariable int userId) {
+        return userService.deleteUser(userId);
+    }
+
+    /**
+     * 127.0.0.1:667/api/user/userId   ---- get
+     */
+    @GetMapping("/user/{userId}")
+    public User getUserByUserId(@PathVariable int userId) {
+        return userService.getUserByUserId(userId);
     }
 }

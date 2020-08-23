@@ -1,0 +1,33 @@
+<div id="addRoleModal" class="modal fade bs-example-modal-lg"
+     tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Role Add</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Role Name</label>
+                        <div class="col-md-8">
+                            <input id="roleNameForAddPage" name="roleName" class="form-control"
+                                   type="text" placeholder="Enter role name">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <!-- data-dismiss="modal" 用于关闭模态框 -->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="insertRoleBtn" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>
