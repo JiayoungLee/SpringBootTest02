@@ -703,6 +703,57 @@ ajax
 	/api/user/{userId} ---- delete      删除user byId
 
 ============= day_10 ===========
+============= day_11 ===========
+table 页
+	开发 table 页后台接口
+		dao ---- service ---- controller ---- 接口测试
+	书写 table 页
+		页面伪代码 ---- 页面跳转控制器 ---- 保证页面跳转okay
+	table 页的功能点
+		表格渲染
+			html 从模版拷贝
+			jquery datatable
+				ajax 属性配置 "ajax": function (data, callback, settings)
+					data包装表格数据，通过浏览器页面js调试，获取data属性 ---- 分页起始index、排序、关键字查询等信息 ----- 包装 searchvo 对象
+					callback 回调函数，将表格数据传入，渲染表格
+				自定义 ajax ---- 请求后台接口，返回数据
+					定义2种数据结构：行数据结构（要显示的列 + 操作列）、表格数据结构（数据count、当前页需要显示的list（包装的行数据结构））
+			测试：分页、keyword查询、排序
+		新增
+			bootstrap 模态框
+				button || a 等 ---- data-toggle="modal" data-target="#addUserModal"
+				模态框的 div ---- header + body + footer
+			事件驱动
+				点击新增按钮 ---- 初始化模态框的值（置空intput框 + 初始化 roles checkbox）
+				模态框上点击save changes ---- 获取模态框表单输入的值，ajax 提交后台接口 新增 ---- 关闭模态框 ---- 重新渲染 table
+		修改
+			事件驱动
+				操作列 update a标签 ---- 打开模态框、初始化模态框数据（当前 userId 获取 user 数据，渲染到模态框上）
+				模态框上 save changes 按钮 ---- 获取模态框表单输入的值，ajax 提交后台接口 修改 ---- 关闭模态框 ---- 重新渲染 table
+		删除
+			事件驱动
+				点击操作列上 删除 a标签 ---- 调用 js 函数，删除当前user ---- 重新渲染 table
+
+profile 页面
+	静态资源文件配置
+		步骤一：pom导入jar ---- 无需导入新的jar
+		步骤二配置：配置
+			application.properties
+				# spring local resource config
+				# 应用指定的 “相对路径”
+				spring.resource.path=/upload/
+				spring.resource.path.pattern=/upload/**
+				# 本地指定的 “绝对路径”，和相对路径映射
+				spring.resource.folder.windows=d:/upload/
+				spring.resource.folder.linux=/upload/
+			配置类 WebMvcConfig implements WebMvcConfigurer
+				重写 addResourceHandlers 方法
+		步骤三：应用并测试
+			使用 test 模块 上传文件进行测试
+
+	准备 profile 页面
+
+vue MVC模式中的V:分为MVVM模式modal、view、view-modal、modal
 
 
 		

@@ -1,4 +1,53 @@
 <div class="right_col" role="main">
+    <h3>Vue 测试</h3>
+
+    <!-- vue测试 -->
+    <div id="vueTest">
+        <h3>文本绑定</h3>
+        <div>{{title}}</div>
+        <br>
+        <h3>属性绑定 ---- 单向绑定 modal to view</h3>
+        UserName: <input type="text" v-bind:value="userName"><br>
+        Password: <input type="text" :value="password"><br>
+        <br>
+        <h3>表单控件绑定 ---- 双向绑定 model<-->view</h3>
+       Email:  <input type="text" v-model:value="email"><br>
+        <!-- v-model.number 表示输入值转化为number类型:类似于java的int/long -->
+        Step: <input type="text" v-model.number="step">
+        Total: <input type="text" v-model="total">
+        <br>
+        <h3>事件绑定</h3>
+        test_1: <input type="button" v-on:click="test_1()" value="test_1"><br>
+        test_2: <input type="button" @click="test_2()" value="test_2"><br>
+
+    </div>
+
+    <script type="text/javascript">
+        var vueTest = new Vue({
+           el:"#vueTest",
+           data: {
+               title: "Vue Test",
+               userName: "Jayoung",
+               password: "111111",
+               rePassword: "111111",
+               email: "JayoungLee@163.com",
+               step: 1,
+               total: 0
+           },
+            methods:{
+               test_1:function () {
+                   alert(this.userName+"---"+this.password);
+                   this.userName="aaaaaa";
+                   this.password = "bbbbbb"
+               },
+               test_2:function () {
+                   this.total = this.total + this.step;
+               }
+            }
+        });
+    </script>
+
+
     <h3>file upload and download</h3>
     <a href="/test/file2?fileName=timg.jpg">download file</a>
 
