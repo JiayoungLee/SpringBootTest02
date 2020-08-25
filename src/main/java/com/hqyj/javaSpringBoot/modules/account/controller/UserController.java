@@ -6,6 +6,7 @@ import com.hqyj.javaSpringBoot.modules.account.service.UserService;
 import com.hqyj.javaSpringBoot.modules.common.vo.Result;
 import com.hqyj.javaSpringBoot.modules.common.vo.SearchVo;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class UserController {
 
 
     /**
+     * Login
      * 127.0.0.1:667/api/login   ---- post
      * {"userName":"admin","password":"111111"}
      */
@@ -71,6 +73,7 @@ public class UserController {
      * 127.0.0.1:667/api/user/userId   ---- delete
      */
     @DeleteMapping("/user/{userId}")
+    @RequiresPermissions(value = "/api/user")
     public Result<Object> deleteUser(@PathVariable int userId) {
         return userService.deleteUser(userId);
     }
@@ -101,4 +104,6 @@ public class UserController {
     public Result<User> updateUserProfile(@RequestBody User user) {
         return userService.updateUserProfile(user);
     }
+
+
 }

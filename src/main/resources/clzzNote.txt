@@ -755,6 +755,23 @@ profile 页面
 
 vue MVC模式中的V:分为MVVM模式modal、view、view-modal、modal
 
+============= day_12 ===========
+shiro
+    步骤一：pom导入jar ---- 无需导入新的jar
+    步骤二：配置
+    	1、application.properties
+             #开启shiro
+             shiro.web.enabled=true
+        2、realm  java类配置MyRealm
+        3、ShiroConfig 类似有之前的shiro.xml文件
+
+
+	身份验证过程
+		用户登录 ---- 包装令牌（用户名、密码、记住我） ---- subject 调用 realm，包装身份验证器 ---- 身份验证器和令牌做比对（用户名和密码的比对）
+	资源授权流程
+		用户登录 ----- subject调用 checkroles（） ---- 跳转页面 ---- 当页面有 shiro 标签 或者方法上有 shiro 注解时候 ---- 调用 realm 里面的资源授权器 ---- 资源授权器和标签或注解上的内容做比对
+
+
 
 		
 		

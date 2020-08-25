@@ -5,6 +5,8 @@ import com.hqyj.javaSpringBoot.modules.account.entity.Resource;
 import com.hqyj.javaSpringBoot.modules.common.vo.Result;
 import com.hqyj.javaSpringBoot.modules.common.vo.SearchVo;
 
+import java.util.List;
+
 /**
  * author  Jayoung
  * createDate  2020/8/23 0023 17:54
@@ -21,4 +23,6 @@ public interface ResourceService {
     Result<Object> deleteResource(int resourceId);
 
     Resource getResourceByResourceId(int resourceId);
+
+    List<Resource> getResourcesByRoleId(int roleId);
 }

@@ -11,6 +11,10 @@ import com.hqyj.javaSpringBoot.modules.account.service.UserService;
 import com.hqyj.javaSpringBoot.modules.common.vo.SearchVo;
 import com.hqyj.javaSpringBoot.utils.MD5Util;
 import com.hqyj.javaSpringBoot.modules.common.vo.Result;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,13 +76,29 @@ public class UserServiceImpl implements UserService {
                 Result.ResultStatus.SUCCESS.status, "insert success！");
     }
 
+    //    Login
     @Override
     public Result<User> getUserByUserNameAndPassword(User user) {
-        User userTmp = userDao.getUserByUserName(user.getUserName());
-        if (userTmp != null && userTmp.getPassword().equals(MD5Util.getMD5(user.getPassword()))) {
-            return new Result<User>(Result.ResultStatus.SUCCESS.status, "Login Successfully!!!");
+
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken =
+                new UsernamePasswordToken(user.getUserName(),
+                        MD5Util.getMD5(user.getPassword()));
+        usernamePasswordToken.setRememberMe(user.getRememberMe());
+
+        try {
+            subject.login(usernamePasswordToken);
+            subject.checkRoles();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result<>(
+                    Result.ResultStatus.FAILED.status, "UserName or Password is Error");
         }
-        return new Result<User>(Result.ResultStatus.FAILED.status, "UserName or Password ERROR!");
+
+        Session session = subject.getSession();
+        session.setAttribute("user",(User)subject.getPrincipal());
+
+        return new Result<User>(Result.ResultStatus.SUCCESS.status, "Login Successfully!!!");
     }
 
     @Override
@@ -134,7 +154,7 @@ public class UserServiceImpl implements UserService {
         String destFilePath = "";
         try {
             String osName = System.getProperty("os.name");
-            osName= osName.toLowerCase();
+            osName = osName.toLowerCase();
             if (osName.startsWith("win")) {
                 destFilePath = resourceConfigBean.getLocationPathForWindows()
                         + file.getOriginalFilename();
@@ -152,7 +172,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return new Result<String>(Result.ResultStatus.FAILED.status, "Upload Failed!!");
         }
-        return new Result<String>(Result.ResultStatus.SUCCESS.status, "Upload Success!!",relativePath);
+        return new Result<String>(Result.ResultStatus.SUCCESS.status, "Upload Success!!", relativePath);
     }
 
     @Override
@@ -164,5 +184,19 @@ public class UserServiceImpl implements UserService {
         }
         userDao.updateUser(user);
         return new Result<User>(Result.ResultStatus.SUCCESS.status, "Update Success!!", user);
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return userDao.getUserByUserName(userName);
+    }
+
+    @Override
+    public void logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+
+        Session session = subject.getSession();
+        session.setAttribute("user",null);
     }
 }

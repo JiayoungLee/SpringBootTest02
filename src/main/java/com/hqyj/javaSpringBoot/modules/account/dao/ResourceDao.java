@@ -55,4 +55,9 @@ public interface ResourceDao {
                     javaType = List.class,
                     many = @Many(select = "com.hqyj.javaSpringBoot.modules.account.dao.RoleDao.getRolesByResourceId"))})
     Resource getResourceByResourceId(int resourceId);
+
+    @Select("SELECT resource.resource_id, resource.resource_uri, resource.resource_name, " +
+            "resource.permission FROM resource INNER JOIN role_resource ON resource.resource_id " +
+            "= role_resource.resource_id where role_resource.role_id = #{roleId}")
+    List<Resource> getResourcesByRoleId(int roleId);
 }

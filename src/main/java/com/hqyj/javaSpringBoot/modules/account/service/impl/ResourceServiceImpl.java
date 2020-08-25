@@ -95,4 +95,9 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource getResourceByResourceId(int resourceId) {
         return resourceDao.getResourceByResourceId(resourceId);
     }
+
+    @Override
+    public List<Resource> getResourcesByRoleId(int roleId) {
+        return resourceDao.getResourcesByRoleId(roleId);
+    }
 }
