@@ -20,4 +20,12 @@ public class CommonController {
     public String dashboardPage(){
         return "index";
     }
+
+    /*
+     * 127.0.0.1:667/common/403   ---- get
+     * */
+    @GetMapping("/403")
+    public String errorPageFor403(){
+        return "index";
+    }
 }

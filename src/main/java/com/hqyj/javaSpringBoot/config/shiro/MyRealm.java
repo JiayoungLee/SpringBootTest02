@@ -52,11 +52,15 @@ public class MyRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        //从令牌中获得userName
         String userName = (String) authenticationToken.getPrincipal();
+        //通过userName 从数据库拿到对应的user
         User user = userService.getUserByUserName(userName);
+        //判断是否有该用户
         if (user == null) {
             throw new UnknownAccountException("The account do not exist");
         }
+        //有的话就把user交给认证器 和之前的 令牌比对
         return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
     }
 }

@@ -1,10 +1,15 @@
 package com.hqyj.javaSpringBoot.config.shiro;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import org.apache.shiro.codec.Base64;
+import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +33,14 @@ public class ShiroConfig {
     private MyRealm myRealm;
 
     @Bean
-    public DefaultSecurityManager securityManager(){
+    public DefaultSecurityManager securityManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealm(myRealm);
+        //记住我功能
+        manager.setRememberMeManager(rememberMeManager());
+        //Session管理
+        manager.setSessionManager(sessionManager());
+
         return manager;
     }
 
@@ -54,16 +64,16 @@ public class ShiroConfig {
      * 该过滤器会寻找shiroFilterFactoryBean，找不到会抛出异常
      */
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(){
+    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager());
 
-        shiroFilter.setLoginUrl("account/login");
-        shiroFilter.setSuccessUrl("account/dashboard");
+        shiroFilter.setLoginUrl("/account/login");
+        shiroFilter.setSuccessUrl("/account/dashboard");
 
-        Map<String,String> map = new LinkedHashMap<String, String>();
-        map.put("/","anon");    //为了弄欢迎页
-        map.put("/static/**","anon");
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        map.put("/", "anon");    //为了弄欢迎页
+        map.put("/static/**", "anon");
         map.put("/js/**", "anon");
         map.put("/css/**", "anon");
         map.put("/plugin/**", "anon");
@@ -71,30 +81,33 @@ public class ShiroConfig {
         map.put("/account/register", "anon");
         map.put("/api/login", "anon");
         map.put("/api/user", "anon");
+        map.put("/account/profile","anon");
 
         map.put("/common/**", "user");
         map.put("/test/**", "user");
+        map.put("/account/**","authc");
 
         // 如果使用“记住我功能”，则采取user规则，如果必须要用户登陆，则采用authc规则
-        map.put("/**","authc");
+        map.put("/**", "authc");
+        shiroFilter.setFilterChainDefinitionMap(map);
 
         return shiroFilter;
     }
 
     /*
-    *  注册shiro方言，让Thymeleaf支持shiro标签
-    * */
+     *  注册shiro方言，让Thymeleaf支持shiro标签
+     * */
     @Bean
-    public ShiroDialect shiroDialect(){
+    public ShiroDialect shiroDialect() {
         return new ShiroDialect();
     }
 
     /*
-    *  自动代理类，支持shiro的注解
-    * */
+     *  自动代理类，支持shiro的注解
+     * */
     @Bean
     @DependsOn({"lifecycleBeanPostProcessor"})
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator =
                 new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
@@ -102,13 +115,69 @@ public class ShiroConfig {
     }
 
     /*
-    * 开启shiro注解
-    * */
+     * 开启shiro注解
+     * */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(){
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor =
                 new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
         return authorizationAttributeSourceAdvisor;
     }
+
+    /*
+     *  记住我-- rememberMeCookie
+     * */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        //这个参数是cookie的名称，对应前端的CheckBox的name=rememberMe
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        //如果httpOnly设置为true，则客户端不会暴露给客户端脚本代码，
+        //使用HTTPOnly cookie有助于减少某些类型的跨站点脚本攻击
+        simpleCookie.setHttpOnly(true);
+        //记住我cookie生效时间，单位是秒
+        simpleCookie.setMaxAge(1 * 24 * 60 * 60);
+        return simpleCookie;
+    }
+
+    /*
+     *  记住我 --- Cookie管理器
+     * */
+    @Bean
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager =
+                new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        byte[] cipherKey = Base64.decode("wGiHplamyXlVB11UXWol8g==");
+        cookieRememberMeManager.setCipherService(new AesCipherService());
+        cookieRememberMeManager.setCipherKey(cipherKey);
+        return cookieRememberMeManager;
+    }
+
+
+    /*
+     *  sessionCookie
+     * */
+    @Bean
+    public SimpleCookie sessionCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("shiro.session");
+        simpleCookie.setPath("/");
+        simpleCookie.setHttpOnly(true);
+        simpleCookie.setMaxAge(1 * 24 * 60 * 60);
+        return simpleCookie;
+    }
+
+    /*
+    *  1、session 管理，去掉重定向后Url追加SESSIONID
+    *  2、shiro默认Cookie名称是
+    * */
+    @Bean
+    public DefaultWebSessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        sessionManager.setSessionIdCookie(sessionCookie());
+        return sessionManager;
+    }
+
+
 }

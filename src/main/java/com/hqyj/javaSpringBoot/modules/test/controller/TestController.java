@@ -271,5 +271,17 @@ public class TestController {
         return "This is test module desc." + paramValue + "==" + paramValue2;
     }
 
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        for (int i=0; i<1000; i++){
+            for (int j=0; j<10000; j++){
+                System.out.println("------------------");
+            }
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+    }
 
+    //外10000 34109
+    //内10000 33832
 }

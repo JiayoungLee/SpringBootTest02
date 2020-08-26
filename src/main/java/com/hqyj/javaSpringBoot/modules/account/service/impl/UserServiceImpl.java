@@ -79,14 +79,16 @@ public class UserServiceImpl implements UserService {
     //    Login
     @Override
     public Result<User> getUserByUserNameAndPassword(User user) {
-
+        //获取subject（shiro与应用层交互的组件）
         Subject subject = SecurityUtils.getSubject();
+        //封装令牌Token，后面好和Myrealm里面的认证器比对
         UsernamePasswordToken usernamePasswordToken =
-                new UsernamePasswordToken(user.getUserName(),
+                new UsernamePasswordToken(user.getAccountName(),
                         MD5Util.getMD5(user.getPassword()));
         usernamePasswordToken.setRememberMe(user.getRememberMe());
 
         try {
+            //调用login方法，进入Myrealm里面的认证方法 --->MyRealm类
             subject.login(usernamePasswordToken);
             subject.checkRoles();
         } catch (Exception e) {
