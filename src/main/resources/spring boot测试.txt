@@ -1,0 +1,197 @@
+﻿一、选择题（共12小题，每小题2.5分，共30分）
+	以下不是spring boot优点的是 ( D )
+		A．快速搭建项目
+		B．简化配置  
+		C．自动配置  
+		D．无需容器
+	Spring Boot配置，以下哪个优先级最高（A ）
+		A、外置：xx.jar同目录下/config/application.properties；
+		B、外置：xx.jar同目录下/config/application.yml；
+		C、内置：src/main/resources/config；
+		D、内置：src/main/resources
+	以下log日志级别哪个最高（D）
+		A、DEBUG
+		B、INFO
+		C、WARN
+		D、ERROR
+	以下不是spring boot的核心注解的是 ( D )
+		A.	@SpringBootConfiguration
+		B.	@EnableAutoConfiguration
+		C.	@ComponentScan
+		D.	@MapperScan
+	要使用springMVC的功能，需要导入那个包 ( C )
+		A．spring-boot-starter-jdbc  
+		B．spring-boot-starter-thymeleaf  
+		C．spring-boot-starter-web  
+		D．mybatis-spring-boot-starter
+	以下哪个注解不能加在类上 ( B )
+		A.	@Controller
+		B.	@ResponseBody
+		C.	@RestController
+		D.	@RequestMapping
+	当控制层上有@RestController注解时，方法中返回一个字符串“<h1>Hello</h1>”，浏览器调用的结果是 ( C )
+		A. 一级标题显示的Hello
+		B.	找不到Hello.html
+		C.	<h1>Hello</>
+		D.	Hello
+	SpringBoot项目中配置文件的格式 ( C )
+		A．properties  
+		B．yml  
+		C．两者都可以
+	不是SpringBoot核心配置文件是（C）
+		A.	bootstrap
+		B.	application
+		C.	application-dev
+	前台使用json参数格式，控制器consumer、参数使用的注解是（A）
+		A、application/josn ---- @RequestBody
+		B、application/josn ---- @ModelAttribute
+		C、application/x-www-form-urlencoded ---- @RequestBody
+		D、application/x-www-form-urlencoded ---- @ModelAttribute
+	@Pointcut("execution(public * com.thornBird.sbd.modules.*.controller.*.*(..))")，第三个*代表（C）
+		A、代表返回类型不限
+		B、代表module下所有子包
+		C、代表所有类
+		D、代表所有方法
+	Url匹配风格中/admin*，以下哪个匹配不正确（D）
+		A、/admin
+		B、/admin1
+		C、/admin123
+		D、/admin/1
+	Mybatis框架中，插入数据使用那个注解（B）
+		A、@Update
+		B、@Insert
+		C、@Select
+		D、@InsertMapping
+
+二、填空题（共5小题，每小题5分，共25分）
+	获取配置文件的属性值，使用哪个注解____@Value____________；
+	Java配置依赖的2个注解是__@Configuration________，___@Bean________;
+	Spring Boot修改tomcat端口号为9090应该怎么写？___server.port=9090_________;
+	自定义拦截器需要实现__HandlerInterceptor______接口；
+	过滤器需要使用___@WebFilter______注解;
+	上传文件，使用_MultipartFile___接收文件对象，consumer使用__multipart/form-data___;
+
+三、问答题（每题5分，共25分）
+	阐述 Spring Boot 特性，举一个例子来解释 Staters 的内容；
+	    特性：
+		快速开发：
+		1、pom文件以starter的形式，按照组类聚多个jar，形成单条jar，
+	    以父子继承的方式，实现jar版本控制；
+		2、习惯优于配置，很多配置都是默认的，简化了配置，没有web.xml
+		3、使用注解开发
+		4、很多配置文件都转化成了配置类，java类读取比配置文件更快，
+	    效率更高
+		5、内嵌式的servlet容器，无需外置容器，有需要也可以打成war包，
+	    也可以打成jar用命令形式运行
+		6、监控方便性：提供了端点监控，方便维护测试人员
+
+	    Starter例子：
+		比如：spring-boot-starter-web就包含了springWeb、SpringWebMvc的jar，
+	    然后springWeb里面包含了springcore、springbeans等spring相关jar
+
+	Mybatis传参中，#{*}、${*}的区别？
+	    #{*}是占位符，类似于PrepareStatement里面的?一样
+	    ${*}是用于字符串拼接，比如在排序的时候需要拼接表里面的字段
+	简述Restful规则？
+	   controller类里面数据处理和页面跳转是分开的
+		1、在一个模块里面有一个控制类专门作为页面跳转的
+		2、在该模块下，对于每个entity的操作，会用对应的控制类来进行数据处理
+	    这些类接口为"/api",类里面的方法接口不能是动宾接口，而是只有宾语，并根据
+	    并以宾语的单复数、提交方式来加以区别不同操作：
+		get方式：查找单个entity		/api/entity/entityId
+		post方式：接口宾语复数的话：查找多个entity  /api/entities
+			  接口宾语为单数的话：插入单个entity  /api/entity
+		put方式：修改entity  /api/entity
+		delete方式：删除entity	/api/entity/entityId
+	简述Git使用流程，写几个常用Git命令？
+	    git clone +远程路径  从远程clone到本地
+	    git status 获取当前状态
+	    git commit 提交到本地仓库
+	    git push +远程地址  push到远程地址
+	简述shiro两大功能实现流程；
+	    1、认证：用户名和密码从页面传到控制器，到服务层:获取subject、把用户名和密码包装到令牌，subject调login，跳到Myreaml的认证方法：拿到username，
+	通过username从数据库拿到正确的userName和password（如果查找到的话），然后把user对象、密码、该类名字交给认证器，认证器再和令牌比对，如果两者里面的一致，
+	则认证成功，否则抛异常，业务层可以此时反应对应的登陆状况信息。
+	    2、授权：当遇到页面的shiro标签或后台的shiro注解，跳到MyReaml授权方法，拿到认证时的user对象，把user的role和permission加入到授权器里面，前台或者后台
+	给予对应的授权。
+
+四、编程题（每题10分，共20分）
+	1、提供一个接口，返回 List<User> 列表，对该列表进行排序、保留10条数据；页面端使用 ajax post 方式提交请求，包装查询参数，获取接口返回数据，并遍历数据渲染到页面上 table 表格中；
+	 @PostMapping(value = "/users",consumes = MediaType.APPLICATION_JSON_VALUE)
+	public PageInfo<User> getUsersBySearchVo(@RequestBody SearchVo searchVo){
+		return userService.getUsersBySearchVo(searchVo);
+	}
+	
+	function initUserTable(pageSize) {
+		'paging': true, //分页
+            "serverSide": true, //开启后端分页
+            "pagingType": "full_numbers", //分页样式的类型simple/simple_numbers/full/full_numbers
+            "pageLength": pageSize, //定义初始的页长
+            "processing": true,     //加载数据时转圈圈
+            "destroy": true, //允许销毁替换，在表格重新查询时，可以自动销毁以前的data
+            'lengthChange': true, //控制是否能够调整每页的条数
+            'searching': true,
+            'data-show-refresh': true,
+            'ordering': true,
+            'autoWidth': false,
+            "ajax": function (data, callback, settings) {
+                // 从data获取查询数据
+                var columIndex = data.order[0].column;
+                var sort = data.order[0].dir;
+                var orderBy = data.columns[columIndex].name;
+                pageSize = data.length == undefined  ? pageSize : data.length;
+
+                var searchVo = {};
+                searchVo.currentPage = (data.start / pageSize) + 1;
+                searchVo.pageSize = pageSize;
+                searchVo.orderBy = orderBy;
+                searchVo.sort = sort;
+                searchVo.keyWord = data.search.value;
+
+		$.ajax({
+                    url : "/api/users",
+                    type : "post",
+                    contentType: "application/json",
+                    data : JSON.stringify(searchVo),
+                    success : function (rs) {
+                        var fData = {
+                            draw :0,
+                            recordsTotal: 0,
+                            recordsFiltered: 0,
+                            data: []
+                        };
+                        if (!rs) {
+                            layer.alert("请求出错，请稍后重试" + rs.errmsg, {icon: 2});
+                            callback(fData);
+                            return;
+                        };
+                        if (rs.list == null) {
+                            $('#datatable tbody tr').remove();
+                            $('#loading').remove();
+                            callback(fData);
+                            return;
+                        }
+                        $('#loading').remove();
+                        var gearDatas = [];
+                        for (var i = 0; i < rs.list.length; i++) {
+                            //包装行数据
+                            var rowData = new TData(rs.list[i].userId, rs.list[i].userName,
+                                rs.list[i].password, rs.list[i].createDate);
+                            // 将行数据放到数组里
+                            gearDatas.push(rowData);
+                        }
+                        fData.data = gearDatas;
+                        fData.recordsTotal = rs.total;
+                        fData.recordsFiltered = rs.total;
+                        callback(fData);
+                    },
+                    error : function (data) {
+                        layer.alert(data.responseText, {icon: 0});
+                    }
+                });
+	}
+	
+	2、设计一套购物车接口，以 Cookie 或者 redis 实现
+
+	@PostMapper(value = "/user",consumes = MediaType.APPLICATION_JSON_VALUE)
+	Result<String> insertShoppingCart(Cart cart);
